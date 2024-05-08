@@ -2,7 +2,7 @@
 
 **Поднять виртуальную машину Ubuntu Server 20.04 LTS**
 
-![linux](src/images/11.jpg)
+![linux](images/11.jpg)
 
 **Скачать и установить на виртуальную машину gitlab-runner**
 
