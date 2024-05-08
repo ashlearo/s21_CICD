@@ -28,7 +28,7 @@
 5. Проверяем версию:  
 **`sudo gitlab-runner -version`**
 
-![linux](src/images/12.jpg)
+![linux](images/12.jpg)
 
 **Запустить gitlab-runner и зарегистрировать его для использования в текущем проекте (DO6_CICD)**  
 
@@ -37,7 +37,7 @@
 проверка, что служба запустилась:   
 **`sudo systemctl status gitlab-runner`**
 
-![linux](src/images/13.jpg)
+![linux](images/13.jpg)
 
 Register a runner, в системе Ubuntu, выполнив команду:   
 **`sudo gitlab-runner register`** 
@@ -45,9 +45,9 @@ Register a runner, в системе Ubuntu, выполнив команду:
 
 на страничке Школы 21 - в проекте CICD, копируем поочередно URL и token  
 
-![linux](src/images/14.jpg)
+![linux](images/14.jpg)
 
-![linux](src/images/15.jpg)
+![linux](images/15.jpg)
 
 ## Предварительно установить make, gcc, и clang-format
 sudo apt install make
@@ -64,11 +64,11 @@ sudo apt install clang-format
 
 **Создаём файл .gitlab-ci.yml в корне проекта и вписываем туда первую стадию build, путь и время храннения скомпилированных файлов (артефактов):**
 
-![linux](src/images/21.jpg)
+![linux](images/21.jpg)
 
 Добавляем в проект все файлы по cat и grep из проекта SimpleBash  
 
-![linux](src/images/22.jpg)
+![linux](images/22.jpg)
 
 делаем в проекте какое нибудь изменение затем коммитим и пушим:   
 
@@ -80,22 +80,22 @@ git push origin develop
 
 наш Pipeline на паузе висит, ждет команду
 
-![linux](src/images/23.jpg)
+![linux](images/23.jpg)
 
 запускаем runner, выполнив команду **`sudo gitlab-runner run`**
 
 видим, что Pipeline заработал меняются статусы
 
-![linux](src/images/24.jpg)
+![linux](images/24.jpg)
 
-![linux](src/images/25.jpg)
+![linux](images/25.jpg)
 
 
 ### Артефакты сохранились
 
-![linux](src/images/27.jpg)
+![linux](images/27.jpg)
 
-![linux](src/images/28.jpg)
+![linux](images/28.jpg)
 
 ## Part 3. Тест кодстайла
 
@@ -105,19 +105,19 @@ git push origin develop
 
 Добавляем этап style в заголовке .gitlab-ci.yml , и ставим задачу по кодстайлу:  
 
-![linux](src/images/32.jpg)
+![linux](images/32.jpg)
 
 Запушил, проверяю:  
 
-![linux](src/images/33.jpg)
+![linux](images/33.jpg)
 
 Теперь добавляем ошибки по кодстайлу в файлы s21_cat s21_grep, пушим и смотрим результат:  
 
 пайплайн - фейлит  
 
-![linux](src/images/34.jpg)
+![linux](images/34.jpg)
 
-![linux](src/images/35.jpg)  
+![linux](images/35.jpg)  
 
 
 ## Part 4. Интеграционные тесты
@@ -129,73 +129,73 @@ git push origin develop
 
 Дописываем этап test в заголовок .gitlab-ci.yml   
 
-![linux](src/images/41.jpg)
+![linux](images/41.jpg)
 
 Ставим задачу по тесту:  
 
-![linux](src/images/42.jpg)
+![linux](images/42.jpg)
 
 Проверка, если сборка и тест кодстайла не прошли успешно - то этап test не запускается:  
 
-![linux](src/images/43.jpg)
+![linux](images/43.jpg)
 
 Другой случай - сборка и тест кодстайла прошли успешно.
 Пушим, и смотрим результат, что все этапы успешно отработали:  
 
-![linux](src/images/44.jpg)
+![linux](images/44.jpg)
 
 Другой случай - специально портим функции cat и grep - чтоб тесты не прошли.  
 Пушим, смотрим результат, что тесты провалились:  
 
-![linux](src/images/46.jpg)
+![linux](images/46.jpg)
 
-![linux](src/images/47.jpg)
+![linux](images/47.jpg)
 
 
 ## Part 5. Этап деплоя
 
 **Поднять вторую виртуальную машину Ubuntu Server 20.04 LTS**
 
-![linux](src/images/51.jpg)
+![linux](images/51.jpg)
 
 Изменяю настройки адаптеров на двух машинах:  
 
-![linux](src/images/52.jpg)
+![linux](images/52.jpg)
 
 Изменяю файл etc/netplan/00-installer-config.yaml для каждой машины,     
 ip 10.20.0.20  Ubuntu_for_CICD    - рабочая машина с нее пушим проект       
 ip 10.20.0.10  Ubuntu_for_deploy  - машина, принимающая развернутый проект, в случае успеха     
 
-![linux](src/images/53.jpg)
+![linux](images/53.jpg)
 
 Проверяем соединение между машинами:  
 
-![linux](src/images/54.jpg)
+![linux](images/54.jpg)
 
 **Написать этап для CD, который "разворачивает" проект на другой виртуальной машине:**
 **Запускать этот этап вручную при условии, что все предыдущие этапы прошли успешно**
 
 Добавляем этап deploy в заголовок .gitlab-ci.yml
 
-![linux](src/images/55.jpg)
+![linux](images/55.jpg)
 
 Ставим задачу по deploy:
 
-![linux](src/images/56.jpg)
+![linux](images/56.jpg)
 
 **Написать bash-скрипт, который при помощи ssh и scp копирует файлы, полученные после сборки (артефакты), в директорию /usr/local/bin второй виртуальной машины**
 
-![linux](src/images/57.jpg)
+![linux](images/57.jpg)
 
 Зададим нужные привилегии пользователю gitlab-runner - добавим его в группу sudo и разрешим запуск команд без пароля, выполнив команду:  
 **`sudo usermod -aG sudo gitlab-runner`**
 
-![linux](src/images/58.jpg)
+![linux](images/58.jpg)
 
 меняем строки в файле /etc/sudoers, используя команду:   
 **`sudo visudo`**
 
-![linux](src/images/59.jpg)
+![linux](images/59.jpg)
 
 Делаем подключение ко второй машине через ssh без необходимости ввода пароля:
 
@@ -204,7 +204,7 @@ c Ubuntu_for_CICD захожу на вторую машину Ubuntu_for_deploy 
 Далее находясь на второй машине, захожу изменяю настройки в конфиг. файле (ставлю поключение по публичному ключу) выполнив команду   
 **`sudo vim /etc/ssh/sshd_config`**
 
-![linux](src/images/510.jpg)
+![linux](images/510.jpg)
 
 перезапускаем сервер ssh выполнив команду  
 **`sudo service ssh restart`**
@@ -212,31 +212,31 @@ c Ubuntu_for_CICD захожу на вторую машину Ubuntu_for_deploy 
 Затем, именно на Ubuntu_for_CICD генерируем ключ  **`sudo -u root ssh-keygen`**
 ((используем "sudo -u root" т.к.от пользователя root выполняется действие, раннер от рута работает, поэтому надо от него ключи создать и перекинуть))
 
-![linux](src/images/511.jpg)
+![linux](images/511.jpg)
 
 и скопируем его на вторую машину командой   
 **`sudo -u root ssh-copy-id ashlearo@10.20.0.10`**
 
-![linux](src/images/512.jpg)
+![linux](images/512.jpg)
 
 Теперь подключаемся на вторую машину Ubuntu_for_deploy через ssh без пароля
 
-![linux](src/images/513.jpg)
+![linux](images/513.jpg)
 
 дадим права для папки /usr/local/bin/ на машине Ubuntu_for_deploy выполнив команду   
 **`sudo chmod -R 777 /usr/local/bin`**
 
-![linux](src/images/514.jpg)
+![linux](images/514.jpg)
 
 Снова пушим и видим, что стадия деплой ждёт ручного запуска:
 
-![linux](src/images/515.jpg)
+![linux](images/515.jpg)
 
 Деплой прошёл успешно, файлы появились в нужной папке на второй машине:
 
-![linux](src/images/516.jpg)
+![linux](images/516.jpg)
 
-![linux](src/images/517.jpg)
+![linux](images/517.jpg)
 
 ## Part 6. Дополнительно. Уведомления
 
@@ -244,25 +244,25 @@ c Ubuntu_for_CICD захожу на вторую машину Ubuntu_for_deploy 
 
 Пишу @botfather, чтобы создать бота и получить его токен
 
-![linux](src/images/61.jpg)
+![linux](images/61.jpg)
 
 Пишу @getmyid_bot, чтобы узнать свой ID telegram
 
-![linux](src/images/62.jpg)
+![linux](images/62.jpg)
 
 Запускаю бота, и пишу в чате созданому боту "ashlearo_d06_CICD_bot" команду:  
 **`/start`**
 
-![linux](src/images/62_.jpg)
+![linux](images/62_.jpg)
 
 В скрипте notifications.sh  прописываем токен и ID telegram
 
-![linux](src/images/63.jpg)
+![linux](images/63.jpg)
 
 После каждой стадии добавляем в .gitlab-ci.yml вызов скрипта ./notifications.sh 
 
-![linux](src/images/64.jpg)
+![linux](images/64.jpg)
 
 Пушим, получаем уведомления от бота - всё работает
 
-![linux](src/images/65.jpg)
+![linux](images/65.jpg)
